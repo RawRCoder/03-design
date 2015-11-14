@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 
 namespace PerfLogging
@@ -7,14 +10,40 @@ namespace PerfLogging
 	{
 		static void Main(string[] args)
 		{
-			/*
-			var sum = 0.0;
-			using (PerfLogger.Measure(t => Console.WriteLine("for: {0}", t)))
-				for (var i = 0; i < 100000000; i++) sum += i;
-			using (PerfLogger.Measure(t => Console.WriteLine("linq: {0}", t)))
-				sum -= Enumerable.Range(0, 100000000).Sum(i => (double)i);
-			Console.WriteLine(sum);
-			*/
+		    var maxiter = 500000;
+            var ml = new List<string>();
+		    using (PerfLogger.Measure(t => Console.WriteLine($"ML: {t.TotalMilliseconds}")))
+		    {
+		        for (var i = 0; i < maxiter; ++i) ml.Add((i+1).ToString());
+            }
+		    var il = ImmutableList<string>.Empty;
+            using (PerfLogger.Measure(t => Console.WriteLine($"IL: {t.TotalMilliseconds}")))
+                for (var i = 0; i < maxiter; ++i) il.Add((i+3).ToString());
+		    Console.ReadKey(true);
 		}
 	}
+
+    internal class PerfLogger : IDisposable
+    {
+        public Stopwatch Watch { get; }
+
+        public PerfLogger(Action<TimeSpan> finalAction)
+        {
+            FinalAction = finalAction;
+            Watch = new Stopwatch();
+            Watch.Start();
+        }
+
+        public Action<TimeSpan> FinalAction { get; }
+        public void Dispose()
+        {
+            Watch.Stop();
+            FinalAction(Watch.Elapsed);
+        }
+
+        public static IDisposable Measure(Action<TimeSpan> f)
+        {
+            return new PerfLogger(f);
+        }
+    }
 }

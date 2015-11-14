@@ -1,4 +1,5 @@
-﻿using FakeItEasy;
+﻿using System;
+using FakeItEasy;
 using NUnit.Framework;
 
 namespace DIContainer
@@ -11,7 +12,7 @@ namespace DIContainer
         {
             var command = A.Fake<ICommand>();
             A.CallTo(() => command.Name).Returns("cmd");
-            var program = new Program(new CommandLineArgs("CMD"), command);
+            var program = new Program(new CommandLineArgs("CMD"), Console.Out, new[] {command});
 
             program.Run();
 

@@ -7,16 +7,18 @@ namespace FluentTask
 		private static void Main()
 		{
 
-			/*
+			
 			var behaviour = new Behavior()
 				.Say("Привет мир!")
 				.UntilKeyPressed(b => b
 					.Say("Ля-ля-ля!")
-					.Say("Тру-лю-лю"))
+					.Say("Тру-лю-лю")
+                    .Delay(TimeSpan.FromSeconds(0.5)))
 				.Jump(JumpHeight.High)
 				.UntilKeyPressed(b => b
 					.Say("Aa-a-a-a-aaaaaa!!!")
-					.Say("[набирает воздух в легкие]"))
+					.Say("[набирает воздух в легкие]")
+                    .Delay(TimeSpan.FromSeconds(0.5)))
 				.Say("Ой!")
 				.Delay(TimeSpan.FromSeconds(1))
 				.Say("Кто здесь?!")
@@ -24,7 +26,7 @@ namespace FluentTask
 
 			behaviour.Execute();
 			behaviour.Execute(); // повторное выполнение сценария
-			*/
+			
 
 		}
 	}
